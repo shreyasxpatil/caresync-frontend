@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
 import { PrivateRoute, PublicRoute } from './components/PrivateRoute';
 import CareAIChatbot from './components/CareAIChatbot';
@@ -50,13 +51,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Toaster
+        <ToastContainer
           position="top-right"
-          toastOptions={{
-            style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' },
-            success: { iconTheme: { primary: '#10b981', secondary: '#f1f5f9' } },
-            error: { iconTheme: { primary: '#ef4444', secondary: '#f1f5f9' } },
-          }}
+          theme="dark"
+          toastClassName="border border-slate-700 bg-slate-800 text-slate-100"
         />
         <Suspense fallback={<PageLoader />}>
           <Routes>
@@ -103,3 +101,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+// Debug file modification

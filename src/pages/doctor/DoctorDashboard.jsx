@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import PatientTable from '../../components/doctor/PatientTable';
 import PatientHistoryPanel from '../../components/doctor/PatientHistoryPanel';
 

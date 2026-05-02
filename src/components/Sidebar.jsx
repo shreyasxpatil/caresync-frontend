@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Heart, LogOut } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 export default function Sidebar({ navItems, role }) {
   const { user, logout } = useAuth();

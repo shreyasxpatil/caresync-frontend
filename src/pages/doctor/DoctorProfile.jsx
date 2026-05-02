@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { Save, User } from 'lucide-react';
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];

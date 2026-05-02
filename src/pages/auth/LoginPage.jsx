@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { Eye, EyeOff, Heart, Shield, Calendar, Activity } from 'lucide-react';
 
 const GOOGLE_AUTH_URL = `${import.meta.env.VITE_API_URL?.replace('/api', '')}/api/auth/google`;

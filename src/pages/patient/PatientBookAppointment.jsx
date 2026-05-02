@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import api from '../../api/axios';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { Stethoscope, Search, User, Calendar, Clock, CreditCard, CheckCircle2 } from 'lucide-react';
 
 export default function PatientBookAppointment() {

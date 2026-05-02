@@ -61,12 +61,12 @@ export default function ContactAndFooter() {
                     btn.disabled = true;
                     btn.innerText = 'Sending...';
                     const api = (await import('../../api/axios')).default;
-                    const toast = (await import('react-hot-toast')).default;
+                    const toast = (await import('sonner')).default;
                     await api.post('/contact', data);
                     toast.success('Message delivered successfully!');
                     e.target.reset();
                   } catch (err) {
-                    const toast = (await import('react-hot-toast')).default;
+                    const toast = (await import('sonner')).default;
                     toast.error('Failed to deliver message. Please try again.');
                   } finally {
                     btn.disabled = false;
