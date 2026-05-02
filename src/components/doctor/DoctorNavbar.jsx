@@ -1,40 +1,64 @@
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Bell, LogOut } from 'lucide-react';
 
 export default function DoctorNavbar() {
   const { user, logout } = useAuth();
 
   return (
-    <header className="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-white border-b border-border-structural shadow-[0_4px_12px_rgba(26,46,37,0.08)]">
-      <div className="text-2xl font-bold text-primary font-serif italic no-underline">
-        CareSync
-      </div>
-      <div className="flex items-center gap-6">
-        <button className="relative p-2 text-slate-500 hover:bg-background transition-colors duration-200 cursor-pointer rounded-full">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>notifications</span>
-          <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-error rounded-full border-2 border-white"></span>
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: 'spring', damping: 20, stiffness: 200 }}
+      className="fixed top-0 w-full z-50 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 shadow-sm flex justify-between items-center px-8"
+    >
+      {/* Brand */}
+      <Link to="/" className="flex items-center gap-3 no-underline group">
+        <div className="size-8 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-200 group-hover:scale-110 transition-transform">
+          <svg fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" viewBox="0 0 24 24" className="w-4 h-4">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+          </svg>
+        </div>
+        <div>
+          <span className="font-heading font-black text-lg text-slate-900 tracking-tight uppercase">CareSync</span>
+          <p className="text-teal-600 text-[9px] font-bold uppercase tracking-[0.2em] -mt-0.5">Doctor Portal</p>
+        </div>
+      </Link>
+
+      {/* Right Controls */}
+      <div className="flex items-center gap-5">
+        {/* Notification Bell */}
+        <button className="relative size-9 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-xl hover:bg-teal-50 hover:border-teal-200 transition-all cursor-pointer shadow-sm">
+          <Bell className="size-4 text-slate-600" />
+          <span className="absolute top-1.5 right-1.5 size-2 bg-teal-500 rounded-full border-2 border-white animate-pulse"></span>
         </button>
-        <div className="flex items-center gap-3 pl-4 border-l border-border-structural">
-          <div className="text-right">
-            <p className="text-sm font-bold text-text-primary font-body-base">Dr. {user?.firstName} {user?.lastName}</p>
-            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-label">{user?.specialization || 'Consultant'}</p>
+
+        {/* User Info */}
+        <div className="flex items-center gap-3 pl-5 border-l border-slate-200">
+          <div className="text-right hidden sm:block">
+            <p className="text-sm font-black text-slate-900 uppercase tracking-tight">Dr. {user?.firstName} {user?.lastName}</p>
+            <p className="text-[10px] text-teal-600 uppercase tracking-widest font-bold">{user?.specialization || 'Consultant'}</p>
           </div>
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 shrink-0 border border-primary/20">
-            <img 
-              alt="Doctor avatar" 
-              className="w-full h-full object-cover" 
+          <div className="size-9 rounded-xl overflow-hidden border-2 border-teal-200 shadow-md shrink-0">
+            <img
+              alt="Doctor avatar"
+              className="w-full h-full object-cover"
               loading="lazy"
-              src={user?.avatar || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=75&fm=webp"} 
+              src={user?.avatar || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=75&fm=webp"}
             />
           </div>
         </div>
-        <button 
-          onClick={logout} 
-          className="ml-4 px-5 py-2 backdrop-blur-md bg-white/30 border border-slate-200/40 shadow-lg hover:bg-white/40 transition-all text-red-600 font-bold rounded-xl text-xs uppercase tracking-widest cursor-pointer"
+
+        {/* Logout */}
+        <button
+          onClick={logout}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 transition-all font-bold text-[12px] uppercase tracking-widest cursor-pointer"
         >
-          Logout
+          <LogOut className="size-3.5" />
+          <span className="hidden sm:block">Logout</span>
         </button>
       </div>
-    </header>
+    </motion.header>
   );
 }

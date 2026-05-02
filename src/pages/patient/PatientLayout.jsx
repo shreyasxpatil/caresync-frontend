@@ -1,81 +1,155 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LayoutDashboard, CalendarPlus, History, Pill, UserCircle, LogOut, ChevronRight, HeartPulse, Menu, X } from 'lucide-react';
+
+const menuItems = [
+  { label: 'Dashboard',         icon: LayoutDashboard, path: '/patient' },
+  { label: 'Book Appointment',  icon: CalendarPlus,    path: '/patient/book' },
+  { label: 'My Appointments',   icon: History,         path: '/patient/appointments' },
+  { label: 'Prescriptions',     icon: Pill,            path: '/patient/prescriptions' },
+  { label: 'My Profile',        icon: UserCircle,      path: '/patient/profile' },
+];
 
 export default function PatientLayout() {
   const { user, logout } = useAuth();
   const location = useLocation();
   const path = location.pathname;
-  
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const onBookingSuccess = () => setRefreshKey(old => old + 1);
 
-  const menuItems = [
-    { label: 'Dashboard', icon: 'dashboard', path: '/patient' },
-    { label: 'Book Appointment', icon: 'calendar_add_on', path: '/patient/book' },
-    { label: 'Appointment History', icon: 'history', path: '/patient/appointments' },
-    { label: 'Prescriptions', icon: 'prescriptions', path: '/patient/prescriptions' },
-  ];
-
-  return (
-    <div className="bg-background min-h-screen text-text-main">
-      {/* Top Navigation */}
-      <header className="bg-white border-b border-border-structural fixed top-0 left-0 right-0 h-16 z-50 px-8 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Link to="/" className="flex items-center gap-3 no-underline group">
-            <div className="size-8 text-primary group-hover:scale-110 transition-transform">
-              <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-                <path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08v0c.85.85 2.23.85 3.08 0L15 8"></path>
-              </svg>
-            </div>
-            <span className="font-heading font-black text-xl text-primary tracking-tighter uppercase">CareSync</span>
-          </Link>
-        </div>
-        
-        <button 
-          onClick={logout} 
-          className="backdrop-blur-md bg-white/30 border border-slate-200/40 shadow-lg hover:bg-white/40 transition-all text-red-600 font-bold rounded-xl uppercase tracking-widest text-[12px] px-6 py-2 cursor-pointer"
-        >
-          Logout
-        </button>
-      </header>
-
-      <div className="flex pt-16">
-        {/* Sidebar Navigation */}
-        <aside className="w-64 bg-white border-r border-border-structural fixed left-0 top-16 bottom-0 z-40 hidden md:block p-6">
-          <div className="mb-10 px-2">
-            <h2 className="text-primary font-heading font-bold text-lg leading-tight uppercase tracking-wide">Patient Portal</h2>
-            <p className="text-muted font-sans text-[11px] font-bold uppercase tracking-widest mt-1 opacity-70">Clinical Access</p>
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full">
+      {/* Brand */}
+      <div className="p-6 pb-4">
+        <Link to="/" className="flex items-center gap-3 no-underline group" onClick={() => setMobileOpen(false)}>
+          <div className="size-10 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <HeartPulse className="size-5 text-white" />
           </div>
+          <div>
+            <span className="font-heading font-black text-xl text-white tracking-tight uppercase">CareSync</span>
+            <p className="text-emerald-300 text-[9px] font-bold uppercase tracking-[0.2em] -mt-0.5">Patient Portal</p>
+          </div>
+        </Link>
+      </div>
 
-          <nav className="space-y-1.5">
-            {menuItems.map((item) => (
-              <Link 
-                key={item.path} 
-                to={item.path} 
-                className={`flex items-center gap-3 px-4 py-3.5 rounded-sm transition-all no-underline ${
-                  path === item.path 
-                    ? 'bg-primary text-white shadow-clinical' 
-                    : 'text-muted hover:bg-background-light hover:text-primary hover:translate-x-1'
+      {/* User Card */}
+      <div className="mx-4 mb-6 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+        <div className="flex items-center gap-3">
+          <div className="size-10 rounded-xl bg-gradient-to-br from-emerald-300 to-teal-400 flex items-center justify-center font-black text-slate-900 text-lg shadow-md">
+            {user?.firstName?.charAt(0)}
+          </div>
+          <div className="min-w-0">
+            <p className="text-white font-bold text-sm truncate">{user?.firstName} {user?.lastName}</p>
+            <p className="text-emerald-300 text-[10px] font-bold uppercase tracking-widest">Patient</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Nav */}
+      <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
+        <p className="text-emerald-400/70 text-[9px] font-black uppercase tracking-[0.25em] px-3 mb-3">Navigation</p>
+        {menuItems.map((item, i) => {
+          const isActive = path === item.path;
+          return (
+            <motion.div key={item.path} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}>
+              <Link
+                to={item.path}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl no-underline transition-all duration-200 group relative ${
+                  isActive
+                    ? 'bg-white text-emerald-700 shadow-lg shadow-black/20'
+                    : 'text-emerald-100 hover:bg-white/15 hover:text-white'
                 }`}
               >
-                <span className={`material-symbols-outlined text-[22px] ${path === item.path ? 'fill-current' : ''}`}>
-                  {item.icon}
-                </span>
-                <span className="font-sans text-[13px] font-bold tracking-tight">
-                  {item.label}
-                </span>
+                <item.icon className={`size-5 transition-transform group-hover:scale-110 ${isActive ? 'text-emerald-600' : ''}`} />
+                <span className="font-bold text-[13px]">{item.label}</span>
+                {isActive && <ChevronRight className="size-4 ml-auto text-emerald-500" />}
               </Link>
-            ))}
-          </nav>
-        </aside>
+            </motion.div>
+          );
+        })}
+      </nav>
 
-        {/* Main Content Area */}
-        <main className="flex-1 md:ml-64 p-6 md:p-8 min-h-[calc(100vh-64px)]">
-          <div className="max-w-[1100px] mx-auto">
-            <Outlet context={{ refreshKey, onBookingSuccess }} />
+      {/* Logout */}
+      <div className="p-4 border-t border-white/10">
+        <button
+          onClick={logout}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-rose-300 hover:bg-rose-500/20 hover:text-rose-200 transition-all font-bold text-[13px] cursor-pointer"
+        >
+          <LogOut className="size-5" />
+          Sign Out
+        </button>
+        <div className="flex items-center gap-2 px-4 mt-3">
+          <span className="size-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <p className="text-emerald-400/70 text-[10px] font-bold uppercase tracking-widest">System Online</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Desktop Sidebar */}
+      <aside className="w-64 hidden md:flex flex-col fixed inset-y-0 z-50 bg-gradient-to-b from-slate-900 via-emerald-950 to-slate-900 shadow-2xl">
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 z-40 md:hidden"
+              onClick={() => setMobileOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: -280 }} animate={{ x: 0 }} exit={{ x: -280 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+              className="fixed inset-y-0 left-0 w-64 z-50 bg-gradient-to-b from-slate-900 via-emerald-950 to-slate-900 shadow-2xl md:hidden flex flex-col"
+            >
+              <SidebarContent />
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Main Area */}
+      <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
+        {/* Top Header */}
+        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/60 h-16 px-6 flex items-center justify-between shadow-sm">
+          <button className="md:hidden text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition" onClick={() => setMobileOpen(true)}>
+            <Menu className="size-5" />
+          </button>
+          <div className="hidden md:block">
+            <h2 className="font-heading font-black text-slate-800 text-lg capitalize">
+              {menuItems.find(m => m.path === path)?.label || 'Dashboard'}
+            </h2>
+            <p className="text-slate-400 text-[11px] font-bold uppercase tracking-widest">Patient Portal</p>
           </div>
+          <div className="flex items-center gap-3 ml-auto">
+            <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 px-4 py-2 rounded-2xl">
+              <div className="size-7 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center font-black text-white text-xs shadow">
+                {user?.firstName?.charAt(0)}
+              </div>
+              <span className="text-slate-700 font-bold text-sm hidden sm:block">{user?.firstName}</span>
+            </div>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 p-6 md:p-8">
+          <motion.div
+            key={path}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+          >
+            <Outlet context={{ refreshKey, onBookingSuccess }} />
+          </motion.div>
         </main>
       </div>
     </div>
