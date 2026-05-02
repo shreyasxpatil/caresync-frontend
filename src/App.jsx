@@ -10,6 +10,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 
 // Components
 import PrivateRoute from "./components/PrivateRoute";
+import CareAIChatbot from "./components/CareAIChatbot";
 
 function App() {
   const { user, loading } = useAuth();
@@ -29,6 +30,9 @@ function App() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+      {/* Global Floating Chatbot */}
+      <CareAIChatbot />
     </Router>
   );
 }
