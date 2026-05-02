@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { Save } from 'lucide-react';
 
 const BLOOD_GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];

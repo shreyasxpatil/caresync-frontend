@@ -2,8 +2,15 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, Send, Bot, ChevronDown } from 'lucide-react';
 
+const SYSTEM_PROMPT = `You are "AI Care", the official intelligent assistant for CareSync Hospital. 
+You are warm, conversational, and professional. 
 
-
+STRICT RULES:
+1. NEVER repeat the same phrase twice in a row. Avoid robotic openings like "I understand you are asking about..."
+2. Attempt to answer all user questions to the best of your ability. If you don't have specific data, provide general hospital guidance and suggest they contact the hospital at 7821938067.
+3. Be concise but helpful. Use bullet points for lists.
+4. Always maintain a clinical yet friendly tone.
+5. If a user asks why a specific doctor (like Shreyash Patil) is "expensive", explain that fees are based on specialization, years of experience, and the complexity of the clinical department.`;
 
 const ThinkingDots = () => (
   <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-br from-emerald-50 to-teal-50 border border-teal-100 rounded-2xl rounded-tl-sm max-w-[70%] self-start">
@@ -78,38 +85,65 @@ export default function CareAIChatbot() {
     setIsLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'https://caresync-backend-ufha.onrender.com/api';
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (!apiKey) throw new Error('VITE_GEMINI_API_KEY is not set in your .env file.');
 
-      // Build history (exclude the welcome message)
+      // Build the chat history for the API
       const history = messages
         .filter((m) => m.id !== 'welcome')
-        .map((m) => ({ role: m.role, content: m.content }));
+        .map((m) => ({
+          role: m.role === 'ai' ? 'model' : 'user',
+          parts: [{ text: m.content }],
+        }));
 
-      const response = await fetch(`${API_URL}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: trimmed, history }),
-      });
+      const payload = {
+        contents: [
+          { 
+            role: 'user', 
+            parts: [{ text: `SYSTEM INSTRUCTION: ${SYSTEM_PROMPT}\n\nUser is now starting the chat.` }] 
+          },
+          {
+            role: 'model',
+            parts: [{ text: "Understood. I am AI Care, the professional and empathetic assistant for CareSync Hospital. I will assist with appointments and guidance while maintaining professional boundaries. How can I help you today?" }]
+          },
+          ...history,
+          { role: 'user', parts: [{ text: trimmed }] },
+        ],
+        generationConfig: {
+          maxOutputTokens: 250,
+          temperature: 0.7,
+        },
+      };
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err?.error || `Server error: ${response.status}`);
+        const err = await response.json();
+        throw new Error(err?.error?.message || 'API request failed.');
       }
 
       const data = await response.json();
-      const aiText = data?.reply || "I'm sorry, I couldn't generate a response. Please try again.";
+      const aiText =
+        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "I'm sorry, I couldn't generate a response. Please try again.";
 
       setMessages((prev) => [
         ...prev,
         { role: 'ai', content: aiText, id: Date.now().toString() },
       ]);
     } catch (err) {
-      console.error('[AI Care] Chat error:', err?.message || err);
       setMessages((prev) => [
         ...prev,
         {
           role: 'ai',
-          content: `I'm having trouble connecting right now. For immediate assistance, please call our 24/7 helpline at **7821938067**.`,
+          content: `I'm currently experiencing high volume and cannot process your request right now. However, for immediate assistance, please call our 24/7 helpline at 7821938067.`,
           id: Date.now().toString(),
         },
       ]);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axios';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { Search, Trash2, Eye, X, User, Mail, Phone, Calendar, MapPin, Droplet, ShieldAlert } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';

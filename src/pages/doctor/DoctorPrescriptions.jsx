@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import api from '../../api/axios';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { Plus, X, User, Stethoscope, Activity, FileText, Calendar, Pill, ClipboardList, Clock, Info } from 'lucide-react';
 
 export default function DoctorPrescriptions() {
