@@ -35,9 +35,11 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import { PrivateRoute } from "./components/PrivateRoute";
 import CareAIChatbot from "./components/CareAIChatbot";
 
+import GlobalLoader from "./components/GlobalLoader";
+
 function App() {
   const { user, loading } = useAuth();
-  if (loading) return <div className="h-screen flex items-center justify-center font-heading text-emerald-600 font-bold">Initializing CareSync...</div>;
+  if (loading) return <GlobalLoader fullScreen text="Initializing CareSync..." />;
 
   return (
     <Router>

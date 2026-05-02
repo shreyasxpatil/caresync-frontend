@@ -3,6 +3,7 @@ import api from '../../api/axios';
 import { motion } from 'framer-motion';
 import { Pill, Activity, Receipt, FileSearch } from 'lucide-react';
 import toast from 'react-hot-toast';
+import GlobalLoader from '../../components/GlobalLoader';
 
 export default function PatientPrescriptions() {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -29,7 +30,7 @@ export default function PatientPrescriptions() {
 
       <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-slate-400 font-bold uppercase tracking-widest text-xs animate-pulse">Fetching Ledger...</div>
+          <GlobalLoader text="Fetching Ledger..." />
         ) : prescriptions.length === 0 ? (
           <div className="p-16 flex flex-col items-center justify-center text-center border-dashed border-2 border-slate-100 m-8 rounded-[2rem]">
              <FileSearch className="size-12 text-slate-300 mb-4" />

@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
+import GlobalLoader from '../../components/GlobalLoader';
 
 const STATUS_STYLE = {
   pending: 'bg-amber-50 text-amber-700 border-amber-100',
@@ -31,14 +32,7 @@ export default function AdminDashboard() {
     api.get('/admin/stats').then(r => setData(r.data)).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-        <div className="size-12 border-4 border-slate-100 border-t-emerald-600 rounded-full animate-spin"></div>
-        <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Initializing Dashboard...</p>
-      </div>
-    );
-  }
+  if (loading) return <GlobalLoader text="Initializing Dashboard..." />;
 
   const { stats, recentAppointments } = data || {};
 
