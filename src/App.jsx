@@ -9,7 +9,7 @@ import DoctorDashboard from "./pages/doctor/DoctorDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
 // Components
-import PrivateRoute from "./components/PrivateRoute";
+import { PrivateRoute } from "./components/PrivateRoute";
 import CareAIChatbot from "./components/CareAIChatbot";
 
 function App() {
@@ -23,9 +23,9 @@ function App() {
         <Route path="/auth/google/success" element={<GoogleCallback />} />
         
         {/* Protected Routes */}
-        <Route path="/patient/*" element={<PrivateRoute role="patient"><PatientDashboard /></PrivateRoute>} />
-        <Route path="/doctor/*" element={<PrivateRoute role="doctor"><DoctorDashboard /></PrivateRoute>} />
-        <Route path="/admin/*" element={<PrivateRoute role="admin"><AdminDashboard /></PrivateRoute>} />
+        <Route path="/patient/*" element={<PrivateRoute roles={["patient"]}><PatientDashboard /></PrivateRoute>} />
+        <Route path="/doctor/*" element={<PrivateRoute roles={["doctor"]}><DoctorDashboard /></PrivateRoute>} />
+        <Route path="/admin/*" element={<PrivateRoute roles={["admin"]}><AdminDashboard /></PrivateRoute>} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
