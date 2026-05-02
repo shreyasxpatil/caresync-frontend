@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Search, Filter, Calendar, Clock, User, Stethoscope, FileText, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
+import GlobalLoader from '../../components/GlobalLoader';
 
 const STATUSES = ['all','pending','confirmed','completed','cancelled'];
 const STATUS_STYLE = {
@@ -99,7 +100,7 @@ export default function AdminAppointments() {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {loading ? (
-                <tr><td colSpan={5} className="px-8 py-20 text-center"><div className="size-10 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div><p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Compiling Records...</p></td></tr>
+                <tr><td colSpan={5}><GlobalLoader text="Compiling Records..." /></td></tr>
               ) : filtered.length ? filtered.map((a, idx) => (
                 <motion.tr 
                   initial={{ opacity: 0, y: 10 }}

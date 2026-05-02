@@ -16,6 +16,7 @@ import {
   HeartPulse
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import GlobalLoader from '../../components/GlobalLoader';
 
 const GreetingSection = ({ name }) => {
   const hour = new Date().getHours();
@@ -79,9 +80,8 @@ const NextScheduleCard = ({ refreshTrigger }) => {
       
       <div className="flex-1">
         {loading ? (
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-slate-100 rounded-lg w-3/4"></div>
-            <div className="h-4 bg-slate-100 rounded-lg w-1/2"></div>
+          <div className="h-full flex items-center justify-center">
+             <GlobalLoader text="Syncing..." />
           </div>
         ) : nextAppointment ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -203,7 +203,9 @@ export default function PatientDashboard() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {loading ? (
-              [1,2,3].map(i => <div key={i} className="h-28 bg-slate-50 rounded-[2rem] animate-pulse"></div>)
+              <div className="col-span-full">
+                <GlobalLoader text="Fetching Regimen..." />
+              </div>
             ) : prescriptions.length > 0 ? (
               prescriptions.flatMap(p => p.medicines || []).slice(0, 3).map((m, idx) => (
                 <motion.div 

@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Search, Trash2, Eye, X, User, Mail, Phone, Calendar, MapPin, Droplet, ShieldAlert } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import GlobalLoader from '../../components/GlobalLoader';
 
 export default function AdminPatients() {
   const [patients, setPatients] = useState([]);
@@ -69,7 +70,7 @@ export default function AdminPatients() {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {loading ? (
-                <tr><td colSpan={6} className="px-8 py-20 text-center"><div className="size-10 border-4 border-slate-100 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div><p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Accessing Registry...</p></td></tr>
+                <tr><td colSpan={6}><GlobalLoader text="Accessing Registry..." /></td></tr>
               ) : filtered.length ? filtered.map((p, idx) => (
                 <motion.tr 
                   initial={{ opacity: 0, x: -10 }}

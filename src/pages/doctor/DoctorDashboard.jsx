@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import PatientTable from '../../components/doctor/PatientTable';
 import PatientHistoryPanel from '../../components/doctor/PatientHistoryPanel';
+import GlobalLoader from '../../components/GlobalLoader';
 
 export default function DoctorDashboard() {
   const { user } = useAuth();
@@ -93,7 +94,9 @@ export default function DoctorDashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {loading ? (
-                <p className="text-slate-500 text-sm">Loading pending queue...</p>
+                <div className="col-span-full">
+                  <GlobalLoader text="Loading pending queue..." />
+                </div>
               ) : pendingAppointments.length === 0 ? (
                 <p className="text-slate-500 text-sm italic col-span-full border p-4 border-dashed rounded-lg">No pending appointment requests.</p>
               ) : (
@@ -142,7 +145,7 @@ export default function DoctorDashboard() {
               </div>
               
               {loading ? (
-                <div className="p-8 text-center text-slate-500">Loading records...</div>
+                <GlobalLoader text="Loading records..." />
               ) : (
                 <PatientTable appointments={otherAppointments} onPatientClick={handlePatientClick} />
               )}

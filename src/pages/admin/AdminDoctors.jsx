@@ -3,6 +3,7 @@ import api from '../../api/axios';
 import toast from 'react-hot-toast';
 import { Plus, X, Edit2, Trash2, Search, User, Mail, Phone, MapPin, Briefcase, GraduationCap, DollarSign, Clock, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import GlobalLoader from '../../components/GlobalLoader';
 
 const INITIAL_FORM = {
   firstName:'', lastName:'', email:'', password:'', phone:'', gender:'',
@@ -105,7 +106,7 @@ export default function AdminDoctors() {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {loading ? (
-                <tr><td colSpan={6} className="px-8 py-20 text-center"><div className="size-10 border-4 border-slate-100 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div><p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Querying Directory...</p></td></tr>
+                <tr><td colSpan={6}><GlobalLoader text="Querying Directory..." /></td></tr>
               ) : filtered.length ? filtered.map((d, idx) => (
                 <motion.tr 
                   initial={{ opacity: 0, x: -10 }}

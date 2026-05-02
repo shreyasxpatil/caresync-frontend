@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Mail, CheckCircle, Clock, User, MessageCircle, ArrowRight, ShieldCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import GlobalLoader from '../../components/GlobalLoader';
 
 export default function AdminMessages() {
   const [messages, setMessages] = useState([]);
@@ -53,10 +54,8 @@ export default function AdminMessages() {
         {/* Inbox List */}
         <div className="w-[400px] flex flex-col gap-3 overflow-y-auto pr-4 custom-scrollbar">
           {loading ? (
-             <div className="space-y-4">
-               {[1,2,3].map(i => (
-                 <div key={i} className="h-32 bg-slate-50 rounded-3xl animate-pulse border border-slate-100" />
-               ))}
+             <div className="h-full flex flex-col justify-center">
+               <GlobalLoader text="Syncing Messages..." />
              </div>
           ) : messages.length ? messages.map((m, idx) => (
             <motion.div 

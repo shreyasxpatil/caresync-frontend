@@ -3,6 +3,7 @@ import api from '../../api/axios';
 import toast from 'react-hot-toast';
 import { Search, CheckCircle, XCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import GlobalLoader from '../../components/GlobalLoader';
 
 const STATUS_BADGE = { pending:'badge-pending', confirmed:'badge-confirmed', completed:'badge-completed', cancelled:'badge-cancelled' };
 
@@ -60,7 +61,7 @@ export default function DoctorAppointments() {
           <thead><tr><th>Patient</th><th>Date</th><th>Time</th><th>Reason</th><th>Symptoms</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody>
             {loading
-              ? <tr><td colSpan={7} style={{textAlign:'center',padding:32,color:'var(--text-muted)'}}>Loading...</td></tr>
+              ? <tr><td colSpan={7}><GlobalLoader text="Syncing Appointments..." /></td></tr>
               : filtered.length
                 ? filtered.map(a=>(
                   <tr key={a._id}>
